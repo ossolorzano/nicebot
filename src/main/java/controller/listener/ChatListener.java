@@ -1,6 +1,5 @@
 package controller.listener;
 
-
 import commands.ICommand;
 import commands.AddNameCommand;
 import controller.Configurations;
@@ -19,22 +18,17 @@ public class ChatListener extends ListenerAdapter {
     private Configuration config;
     private static final Logger LOGGER=LoggerFactory.getLogger(ChatListener.class);
     private ICommand addNameCommand;
-    private Configurations configurations;
-
-    //Strings for commands
-
 
     public ChatListener(){
-        configurations = new Configurations();
         //Create config
         config=new Configuration.Builder()
                 .setAutoNickChange(false)
                 .setOnJoinWhoEnabled(false)
-                .addCapHandler(new EnableCapHandler(configurations.CAP_HANDLER))
-                .setName(configurations.BOT_NAME)
-                .addServer(configurations.SERVER_NAME)
-                .setServerPassword(configurations.OAUTH)
-                .addAutoJoinChannel(configurations.CHANNEL_NAME)
+                .addCapHandler(new EnableCapHandler(Configurations.CAP_HANDLER))
+                .setName(Configurations.BOT_NAME)
+                .addServer(Configurations.SERVER_NAME)
+                .setServerPassword(Configurations.OAUTH)
+                .addAutoJoinChannel(Configurations.CHANNEL_NAME)
                 .addListener(this)
                 .buildConfiguration();
         //Init Commands
