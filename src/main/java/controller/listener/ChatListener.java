@@ -46,15 +46,7 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGenericMessage(GenericMessageEvent event){
-        ICommand command = handleInput(event);
-        if(command!=null) {
-            command.execute(event);
-        }
-    }
-
-    private ICommand handleInput(GenericMessageEvent event){
         if(event.getMessage().equals(Configurations.ADD_NAME))
-                return addNameCommand;
-        return null;
+            addNameCommand.execute(event);
     }
 }
