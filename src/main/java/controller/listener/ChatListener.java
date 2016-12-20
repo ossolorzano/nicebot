@@ -3,6 +3,7 @@ package controller.listener;
 
 import commands.ICommand;
 import commands.AddNameCommand;
+import controller.Configurations;
 import org.pircbotx.Configuration;
 import org.pircbotx.cap.EnableCapHandler;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -10,68 +11,39 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-
 /**
  * Created by Oscar on 11/17/2016.
  */
 public class ChatListener extends ListenerAdapter {
 
     private Configuration config;
-    private String botName, serverName, oauth, channelName, capHandler, startPoll;
     private static final Logger LOGGER=LoggerFactory.getLogger(ChatListener.class);
-    private ICommand writeNameCommand;
+    private ICommand addNameCommand;
+    private Configurations configurations;
+
+    //Strings for commands
+
 
     public ChatListener(){
-        //Init string values from properties
-        initConfigSettings();
+        configurations = new Configurations();
         //Create config
         config=new Configuration.Builder()
                 .setAutoNickChange(false)
                 .setOnJoinWhoEnabled(false)
-                .addCapHandler(new EnableCapHandler(capHandler))
-                .setName(botName)
-                .addServer(serverName)
-                .setServerPassword(oauth)
-                .addAutoJoinChannel(channelName)
+                .addCapHandler(new EnableCapHandler(configurations.CAP_HANDLER))
+                .setName(configurations.BOT_NAME)
+                .addServer(configurations.SERVER_NAME)
+                .setServerPassword(configurations.OAUTH)
+                .addAutoJoinChannel(configurations.CHANNEL_NAME)
                 .addListener(this)
                 .buildConfiguration();
         //Init Commands
         initCommands();
     }
 
-    private void initConfigSettings(){
-        //Setup Properties file
-        Properties properties = new Properties();
-        String path = "."+ File.separator+"config.properties";
-        try {
-            FileInputStream file = new FileInputStream(path);
-            properties.load(file);
-            file.close();
-        }catch(FileNotFoundException e){
-            LOGGER.error("Properties File Not Found!", e);
-            System.exit(0);
-        }catch(IOException e){
-            LOGGER.error("Properties Load Error!", e);
-            System.exit(0);
-        }
-        //Get String values from properties file
-        botName = properties.getProperty("botName");
-        serverName = properties.getProperty("serverName");
-        oauth = properties.getProperty("oauth");
-        channelName = properties.getProperty("channelName");
-        capHandler = properties.getProperty("capHandler");
-
-        startPoll = properties.getProperty("startPoll");
-    }
-
     private void initCommands(){
         //CreateCommands
-        writeNameCommand = new AddNameCommand();
+        addNameCommand = new AddNameCommand();
     }
 
     public Configuration getConfig(){
@@ -87,11 +59,8 @@ public class ChatListener extends ListenerAdapter {
     }
 
     private ICommand handleInput(GenericMessageEvent event){
-        switch(event.getMessage()){
-            case "ayy":
-                writeNameCommand.execute(event);
-            default:
-                return null;
-        }
+        if(event.getMessage().equals(Configurations.ADD_NAME))
+                return addNameCommand;
+        return null;
     }
 }
