@@ -2,8 +2,7 @@ package controller.listener;
 
 
 import commands.ICommand;
-import commands.WriteNameCommand;
-import controller.sheets.SheetController;
+import commands.AddNameCommand;
 import org.pircbotx.Configuration;
 import org.pircbotx.cap.EnableCapHandler;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -26,7 +25,6 @@ public class ChatListener extends ListenerAdapter {
     private String botName, serverName, oauth, channelName, capHandler, startPoll;
     private static final Logger LOGGER=LoggerFactory.getLogger(ChatListener.class);
     private ICommand writeNameCommand;
-    private SheetController sheetController;
 
     public ChatListener(){
         //Init string values from properties
@@ -42,7 +40,6 @@ public class ChatListener extends ListenerAdapter {
                 .addAutoJoinChannel(channelName)
                 .addListener(this)
                 .buildConfiguration();
-        sheetController = new SheetController();
         //Init Commands
         initCommands();
     }
@@ -74,7 +71,7 @@ public class ChatListener extends ListenerAdapter {
 
     private void initCommands(){
         //CreateCommands
-        writeNameCommand = new WriteNameCommand(sheetController.getService(),sheetController.getSpreadsheetId());
+        writeNameCommand = new AddNameCommand();
     }
 
     public Configuration getConfig(){

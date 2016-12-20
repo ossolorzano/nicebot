@@ -1,5 +1,4 @@
 import controller.listener.ChatListener;
-import controller.sheets.SheetController;
 import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
 
